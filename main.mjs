@@ -5,6 +5,9 @@ import { Client, GatewayIntentBits } from 'discord.js';
 import dotenv from 'dotenv';
 import express from 'express';
 
+// キャラデータを読み込み
+import { characters } from './characters/summer_pockets.js';
+
 // .envファイルから環境変数を読み込み
 dotenv.config();
 
@@ -28,12 +31,23 @@ client.once('ready', () => {
 client.on('messageCreate', (message) => {
     // Bot自身のメッセージは無視
     if (message.author.bot) return;
-    
-    // 「ping」メッセージに反応
-    if (message.content.toLowerCase() === 'ping') {
-        message.reply('🏓 pong!');
-        console.log(`📝 ${message.author.tag} が ping コマンドを使用`);
-    }
+
+    const content = message.content.toLowerCase();
+
+    // ⚙️ すでに反応済みかどうか（複数キャラの同時反応防止）
+    let reacted = false;
+
+    for (const char of characters) {
+        if (reacted) break; // 一人反応したら終了
+
+        // 部分一致トリガー
+        if (char.triggers.some(word => content.includes(word))) {
+            const line = char.replies[Math.floor(Math.random() * char.replies.length)];
+            message.reply(`**${char.name}**：「${line}」`);
+            console.log(`🎙 ${char.name} が反応 (${message.author.tag})`);
+            reacted = true; // 他キャラが反応しないよう制御
+        }
+    }
 });
 
 // エラーハンドリング
