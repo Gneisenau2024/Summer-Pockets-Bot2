@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "summer-pockets-bot2",
   "version": "1.0.0",
   "description": "試作3号機（AI提案コード試用）",
