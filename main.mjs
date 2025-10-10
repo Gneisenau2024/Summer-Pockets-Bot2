@@ -1,9 +1,10 @@
 // main.mjs - Discord Botのメインプログラム
 
 // 必要なライブラリを読み込み
-import { Client, GatewayIntentBits } from 'discord.js';
+import { Client, GatewayIntentBits, Collection, Events } from 'discord.js';
 import dotenv from 'dotenv';
 import express from 'express';
+import fs from 'fs';
 
 // キャラデータを読み込み
 import { characters } from './characters/summer_pockets.js';
@@ -13,57 +14,49 @@ dotenv.config();
 
 // Discord Botクライアントを作成
 const client = new Client({
-    intents: [
-        GatewayIntentBits.Guilds,           // サーバー情報取得
-        GatewayIntentBits.GuildMessages,    // メッセージ取得
-        GatewayIntentBits.MessageContent,   // メッセージ内容取得
-        GatewayIntentBits.GuildMembers,     // メンバー情報取得
-    ],
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent,
+        GatewayIntentBits.GuildMembers,
+    ],
 });
 
-// コマンドを格納するコレクション
+// --- コマンド読み込み ---
 client.commands = new Collection();
-
-// commands フォルダのコマンドを読み込む
-import fs from 'fs';
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+const commandFiles = fs.readdirSync('./commands').filter(f => f.endsWith('.js'));
 
 for (const file of commandFiles) {
     const command = await import(`./commands/${file}`);
     client.commands.set(command.default.data.name, command.default);
 }
 
-
-// Botが起動完了したときの処理
+// --- Bot起動完了 ---
 client.once('ready', () => {
-    console.log(`🎉 ${client.user.tag} が正常に起動しました！`);
-    console.log(`📊 ${client.guilds.cache.size} つのサーバーに参加中`);
+    console.log(`🎉 ${client.user.tag} が正常に起動しました！`);
+    console.log(`📊 ${client.guilds.cache.size} つのサーバーに参加中`);
 });
 
-// メッセージが送信されたときの処理
+// --- メッセージ反応 ---
 client.on('messageCreate', (message) => {
-    // Bot自身のメッセージは無視
-    if (message.author.bot) return;
+    if (message.author.bot) return;
 
-    const content = message.content.toLowerCase();
-
-    // ⚙️ すでに反応済みかどうか（複数キャラの同時反応防止）
+    const content = message.content.toLowerCase();
     let reacted = false;
 
     for (const char of characters) {
-        if (reacted) break; // 一人反応したら終了
+        if (reacted) break;
 
-        // 部分一致トリガー
         if (char.triggers.some(word => content.includes(word))) {
             const line = char.replies[Math.floor(Math.random() * char.replies.length)];
             message.reply(`**${char.name}**：「${line}」`);
             console.log(`🎙 ${char.name} が反応 (${message.author.tag})`);
-            reacted = true; // 他キャラが反応しないよう制御
+            reacted = true;
         }
     }
 });
 
-// ❗ ここから追加：スラッシュコマンド対応
+// --- スラッシュコマンド反応 ---
 client.on(Events.InteractionCreate, async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
 
@@ -80,45 +73,43 @@ client.on(Events.InteractionCreate, async (interaction) => {
     }
 });
 
-// エラーハンドリング
+// --- エラーハンドリング ---
 client.on('error', (error) => {
-    console.error('❌ Discord クライアントエラー:', error);
+    console.error('❌ Discord クライアントエラー:', error);
 });
 
-// プロセス終了時の処理
+// --- プロセス終了時の処理 ---
 process.on('SIGINT', () => {
-    console.log('🛑 Botを終了しています...');
-    client.destroy();
-    process.exit(0);
+    console.log('🛑 Botを終了しています...');
+    client.destroy();
+    process.exit(0);
 });
 
-// Discord にログイン
+// --- Discord ログイン ---
 if (!process.env.DISCORD_TOKEN) {
-    console.error('❌ DISCORD_TOKEN が .env ファイルに設定されていません！');
-    process.exit(1);
+    console.error('❌ DISCORD_TOKEN が .env ファイルに設定されていません！');
+    process.exit(1);
 }
 
 console.log('🔄 Discord に接続中...');
 client.login(process.env.DISCORD_TOKEN)
-    .catch(error => {
-        console.error('❌ ログインに失敗しました:', error);
-        process.exit(1);
-    });
+    .catch(error => {
+        console.error('❌ ログインに失敗しました:', error);
+        process.exit(1);
+    });
 
-// Express Webサーバーの設定（Render用）
+// --- Express Webサーバー（Render用） ---
 const app = express();
 const port = process.env.PORT || 3000;
 
-// ヘルスチェック用エンドポイント
 app.get('/', (req, res) => {
-    res.json({
-        status: 'Bot is running! 🤖',
-        uptime: process.uptime(),
-        timestamp: new Date().toISOString()
-    });
+    res.json({
+        status: 'Bot is running! 🤖',
+        uptime: process.uptime(),
+        timestamp: new Date().toISOString()
+    });
 });
 
-// サーバー起動
 app.listen(port, () => {
-    console.log(`🌐 Web サーバーがポート ${port} で起動しました`);
+    console.log(`🌐 Web サーバーがポート ${port} で起動しました`);
 });
