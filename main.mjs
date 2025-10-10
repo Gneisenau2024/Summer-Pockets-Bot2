@@ -21,6 +21,19 @@ const client = new Client({
     ],
 });
 
+// コマンドを格納するコレクション
+client.commands = new Collection();
+
+// commands フォルダのコマンドを読み込む
+import fs from 'fs';
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+
+for (const file of commandFiles) {
+    const command = await import(`./commands/${file}`);
+    client.commands.set(command.default.data.name, command.default);
+}
+
+
 // Botが起動完了したときの処理
 client.once('ready', () => {
     console.log(`🎉 ${client.user.tag} が正常に起動しました！`);
