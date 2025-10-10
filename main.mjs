@@ -50,6 +50,23 @@ client.on('messageCreate', (message) => {
     }
 });
 
+// ❗ ここから追加：スラッシュコマンド対応
+client.on(Events.InteractionCreate, async (interaction) => {
+    if (!interaction.isChatInputCommand()) return;
+
+    const command = client.commands.get(interaction.commandName);
+    if (!command) return;
+
+    try {
+        await command.execute(interaction);
+    } catch (error) {
+        console.error('❌ コマンド実行エラー:', error);
+        if (!interaction.replied) {
+            await interaction.reply({ content: 'エラーが発生しました。', ephemeral: true });
+        }
+    }
+});
+
 // エラーハンドリング
 client.on('error', (error) => {
     console.error('❌ Discord クライアントエラー:', error);
