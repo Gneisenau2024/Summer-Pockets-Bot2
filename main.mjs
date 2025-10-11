@@ -64,11 +64,25 @@ client.on(Events.InteractionCreate, async (interaction) => {
     if (!command) return;
 
     try {
+        // コマンド実行
         await command.execute(interaction);
     } catch (error) {
         console.error('❌ コマンド実行エラー:', error);
-        if (!interaction.replied) {
-            await interaction.reply({ content: 'エラーが発生しました。', flags: False });
+
+        // 安全なエラーハンドリング
+        try {
+            if (interaction.deferred || interaction.replied) {
+                await interaction.editReply({
+                    content: '⚠️ コマンド実行中にエラーが発生しました。',
+                });
+            } else {
+                await interaction.reply({
+                    content: '⚠️ コマンド実行中にエラーが発生しました。',
+                    flags: MessageFlags.Ephemeral, // 非公開メッセージ
+                });
+            }
+        } catch (innerError) {
+            console.error('⚠️ エラー応答にも失敗:', innerError);
         }
     }
 });
