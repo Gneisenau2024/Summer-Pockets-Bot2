@@ -68,7 +68,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
     } catch (error) {
         console.error('❌ コマンド実行エラー:', error);
         if (!interaction.replied) {
-            await interaction.reply({ content: 'エラーが発生しました。', ephemeral: true });
+            await interaction.reply({ content: 'エラーが発生しました。', flags: False });
         }
     }
 });
