@@ -78,6 +78,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             } else {
                 await interaction.reply({
                     content: '⚠️ コマンド実行中にエラーが発生しました。',
+                    flags: MessageFlags.Ephemeral, // 非公開メッセージ
                 });
             }
         } catch (innerError) {
