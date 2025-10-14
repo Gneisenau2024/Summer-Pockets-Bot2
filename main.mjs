@@ -40,31 +40,32 @@ client.once('clientReady', () => {
 client.on('messageCreate', (message) => {
     if (message.author.bot) return;
 
-    const content = message.content.toLowerCase();
+    const content = message.content.toLowerCase().trim(); // 前後の空白も削除
     let reacted = false;
 
     for (const char of characters) {
         if (reacted) break;
 
-        // 特定文章チェック
+        // ① 特定文章チェック（不完全一致）
         const specific = char.specificReplies?.find(item => content.includes(item.trigger));
         if (specific) {
             message.reply(`**${char.name}**：「${specific.reply}」`);
-            console.log(`${char.name} が反応 (${message.author.tag})`);
+            console.log(`${char.name} が特定文章に反応 (${message.author.tag})`);
             reacted = true;
             break;
         }
 
-        // 通常ランダム返信
-        if (char.triggers.some(word => content.includes(word))) {
+        // 通常ランダム返信（完全一致）
+        if (char.triggers.some(word => content === word.toLowerCase())) {
             const line = char.replies[Math.floor(Math.random() * char.replies.length)];
             message.reply(`**${char.name}**：「${line}」`);
-            console.log(`🎙 ${char.name} がランダム反応 (${message.author.tag})`);
+            console.log(`🎙 ${char.name} がランダム反応（完全一致） (${message.author.tag})`);
             reacted = true;
             break;
         }
     }
 });
+
 
 
 // --- スラッシュコマンド反応 ---
