@@ -16,6 +16,11 @@ export const characters = [
             '……ふーん',
             '……変なひと'
         ],
+        // 特定の文章に対する固定返信
+        specificReplies: [
+            { trigger: 'スイカバー', reply: '食べたい…' },
+            { trigger: 'れいだーん', reply: '！？' },
+        ],
     },
     {
         name: '久島鴎',
