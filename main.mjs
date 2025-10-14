@@ -127,3 +127,13 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
     console.log(`🌐 Web サーバーがポート ${port} で起動しました`);
 });
+
+import fetch from "node-fetch";
+
+try {
+  const res = await fetch("https://discord.com/api/v10/gateway");
+  const data = await res.json();
+  console.log("🌐 Discord Gateway に接続成功:", data.url);
+} catch (err) {
+  console.error("🚫 Discord Gateway への接続失敗:", err);
+}
