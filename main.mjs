@@ -32,7 +32,7 @@ for (const file of commandFiles) {
 }
 
 // --- Bot起動完了 ---
-client.once('ready', () => {
+client.once('clientReady', () => {
     console.log(`🎉 ${client.user.tag} が正常に起動しました！`);
     console.log(`📊 ${client.guilds.cache.size} つのサーバーに参加中`);
 });
