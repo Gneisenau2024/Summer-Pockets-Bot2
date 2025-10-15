@@ -66,6 +66,7 @@ export const characters = [
             { trigger: 'あっエロ本', reply: ['ど、どこどこ？'] },
             { trigger: ['おはよう蒼','蒼おはよう'], reply: ['最初は優しくお願いしますー！','手篭めにするつもり！？'] },
             { trigger: 'もう知り合い?', reply: '寝てるところを手籠めにされかけたわ！' },
+            { trigger: 'かき氷', reply: '100万円ね' },
         ],
     },
     {
@@ -100,7 +101,7 @@ export const characters = [
         ],
     },
     {
-        name: 'ツムギウェンダース',
+        name: 'ツムギヴェンダース',
         triggers: ['ツムギ'],
         replies: [
             'なんでしょう？',
