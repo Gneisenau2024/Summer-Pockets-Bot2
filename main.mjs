@@ -9,6 +9,25 @@ import fs from 'fs';
 // キャラデータを読み込み
 import { characters } from './characters/summer_pockets.js';
 
+// --- 直前の返信を記録するマップ（キャラ名ごと） ---
+const lastReplies = new Map();
+
+/**
+ * 同じセリフを連続で出さないランダム返信選択関数
+ */
+function getRandomReply(charName, replies) {
+    const list = Array.isArray(replies) ? replies : [replies];
+    const last = lastReplies.get(charName);
+
+    let candidates = list.filter(r => r !== last);
+    if (candidates.length === 0) candidates = list;
+
+    const selected = candidates[Math.floor(Math.random() * candidates.length)];
+    lastReplies.set(charName, selected);
+
+    return selected;
+}
+
 // .envファイルから環境変数を読み込み
 dotenv.config();
 
@@ -37,34 +56,46 @@ client.once('clientReady', () => {
     console.log(`📊 ${client.guilds.cache.size} つのサーバーに参加中`);
 });
 
-client.on('messageCreate', (message) => {
-    if (message.author.bot) return;
+client.on('messageCreate', (message) => { 
+    if (message.author.bot) return; 
 
-    const content = message.content.toLowerCase().trim(); // 前後の空白も削除
-    let reacted = false;
+    const content = message.content.toLowerCase().trim(); 
+    let reacted = false; 
 
-    for (const char of characters) {
-        if (reacted) break;
+    for (const char of characters) { 
+        if (reacted) break; 
 
-        // ① 特定文章チェック（不完全一致）
-        const specific = char.specificReplies?.find(item => content.includes(item.trigger));
-        if (specific) {
-            message.reply(`**${char.name}**：「${specific.reply}」`);
-            console.log(`${char.name} が特定文章に反応 (${message.author.tag})`);
-            reacted = true;
-            break;
-        }
+        // --- 特定文章チェック（部分一致 & 複数トリガー対応） --- 
+        const specific = char.specificReplies?.find(item => {
+            if (Array.isArray(item.trigger)) {
+                // triggerが配列ならどれかにマッチすればOK
+                return item.trigger.some(t => content.includes(t.toLowerCase()));
+            } else {
+                // 文字列の場合
+                return content.includes(item.trigger.toLowerCase());
+            }
+        });
 
-        // 通常ランダム返信（完全一致）
-        if (char.triggers.some(word => content === word.toLowerCase())) {
-            const line = char.replies[Math.floor(Math.random() * char.replies.length)];
-            message.reply(`**${char.name}**：「${line}」`);
-            console.log(`🎙 ${char.name} がランダム反応（完全一致） (${message.author.tag})`);
-            reacted = true;
-            break;
-        }
-    }
+        if (specific) {  
+            const replyText = getRandomReply(char.name, specific.reply); 
+            message.reply(`**${char.name}**：「${replyText}」`);  
+            console.log(`${char.name} が特定文章に反応 (${message.author.tag})`);  
+            reacted = true;  
+            break;  
+        }  
+
+        // --- 通常ランダム返信（完全一致） --- 
+        if (char.triggers.some(word => content === word.toLowerCase())) {  
+            const line = getRandomReply(char.name, char.replies); 
+            message.reply(`**${char.name}**：「${line}」`);  
+            console.log(`🎙 ${char.name} がランダム反応（完全一致） (${message.author.tag})`);  
+            reacted = true;  
+            break;  
+        }  
+    }  
 });
+
+
 
 
 
