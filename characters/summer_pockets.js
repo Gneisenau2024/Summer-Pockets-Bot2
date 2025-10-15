@@ -140,6 +140,7 @@ export const characters = [
             { trigger: 'フレッシュなオレンジ', reply: 'フレッシュなオレンジとな' },
             { trigger: 'チャーハンおいしくない', reply: ['なんですと！？','うみゅ……'] },
             { trigger: 'うみちゃん？', reply: 'ちゃんゆーな...' },
+            { trigger: '神...？', reply: 'うみです' },
         ],
     },
 ];
