@@ -13,7 +13,8 @@ export const characters = [
             '……どすこいっ！',
             '……何してるの',
             '……ふーん',
-            '……変なひと'
+            '……変なひと',
+            'うわぁぁぁ！？な、な、な、なななに？'
         ],
         // 特定の文章に対する固定返信
         specificReplies: [
@@ -22,11 +23,11 @@ export const characters = [
             { trigger: 'たぬき', reply: 'たばかったな' },
             { trigger: '釣れる？', reply: 'ぼちぼちです' },
             { trigger: 'ぼっち', reply: 'ぼっち言い過ぎ...' },
-            { trigger: '', reply: '' },
-            { trigger: '', reply: '' },
-            { trigger: '', reply: '' },
-            { trigger: '', reply: '' },
-            { trigger: '', reply: '' },
+            { trigger: '紙飛行機', reply: ['私のハイパーマスタングスペシャル・ディメンションⅣ・マークⅢの方がよく飛ぶし...','私のスーパーマスタングファイア・コズミックモード・レベルⅦの方がよく飛ぶし...','私のウルトラホークホライゾン・ウィング・エクストラⅣの方がよく飛ぶし...'] },
+            { trigger: 'スカート', reply: '.....変態' },
+            { trigger: 'ケツァルコアトル', reply: 'くけぇー！くけぇー！' },
+            { trigger: 'たかはら', reply: '....さかはらじゃなくて？' },
+            { trigger: 'チャーハンの作りかた教えて', reply: 'いいよ' },
         ],
     },
     {
@@ -44,11 +45,9 @@ export const characters = [
         specificReplies: [
             { trigger: 'かもめぇ', reply: 'ちっさいぇをつけて呼ばないで欲しい！' },
             { trigger: 'むごっほ', reply: '出た！謎の発作むごっほ！' },
-            { trigger: '', reply: '' },
-            { trigger: '', reply: '' },
-            { trigger: '', reply: '' },
-            { trigger: '', reply: '' },
-            { trigger: '', reply: '' },
+            { trigger: '曲がり切れるのか!', reply: '大丈夫! 強行突破!' },
+            { trigger: 'カイテイに潜むカイジン', reply: 'うけー！きぇー！！' },
+            { trigger: '空がさ…', reply: 'ああ～…。本当青いね' },
         ],
     },
     {
@@ -65,10 +64,8 @@ export const characters = [
         // 特定の文章に対する固定返信
         specificReplies: [
             { trigger: 'あっエロ本', reply: ['ど、どこどこ？'] },
-            { trigger: 'おはよう蒼', reply: ['最初は優しくお願いしますー！','手篭めにするつもり！？'] },
-            { trigger: '', reply: '' },
-            { trigger: '', reply: '' },
-            { trigger: '', reply: '' },
+            { trigger: ['おはよう蒼','蒼おはよう'], reply: ['最初は優しくお願いしますー！','手篭めにするつもり！？'] },
+            { trigger: 'もう知り合い?', reply: '寝てるところを手籠めにされかけたわ！' },
         ],
     },
     {
