@@ -123,6 +123,7 @@ export const characters = [
         ],
         // 特定の文章に対する固定返信
         specificReplies: [
+            { trigger: ['うみちゃーはん','うみチャーハン'], reply: 'うみじゃなくてうに！' },
             { trigger: ['チャーハン','ちゃーはん'], reply: ['得意料理なんです！','研鑽を重ねてきました！','可能性の塊です！'] },
             { trigger: ['チャーハンおいしい','ちゃーはんおいしい'], reply: ['そうでもないです','まだ日々修行中です'] },
             { trigger: 'うみのパンツ', reply: 'おまわりさんこの人です！' },
@@ -142,7 +143,6 @@ export const characters = [
             { trigger: 'チャーハンおいしくない', reply: ['なんですと！？','うみゅ……'] },
             { trigger: 'うみちゃん？', reply: 'ちゃんゆーな...' },
             { trigger: '神...？', reply: 'うみです' },
-            { trigger: 'うみちゃーはん', reply: 'うみじゃなくてうに！' },
         ],
     },
 ];
