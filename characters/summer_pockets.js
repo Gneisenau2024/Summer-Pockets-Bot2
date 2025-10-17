@@ -49,6 +49,7 @@ export const characters = [
             { trigger: '曲がり切れるのか!', reply: '大丈夫! 強行突破!' },
             { trigger: 'カイテイに潜むカイジン', reply: 'うけー！きぇー！！' },
             { trigger: '空がさ…', reply: 'ああ～…。本当青いね' },
+            { trigger: '階梯', reply: 'ええ…そんな言葉知らないよ' },
         ],
     },
     {
@@ -61,6 +62,7 @@ export const characters = [
             'エロちゃうわ！',
             'もうバイトの時間じゃない！',
             'かき氷〜',
+            'もしかして、あたしに惚れちゃった？',
         ],
         // 特定の文章に対する固定返信
         specificReplies: [
@@ -70,6 +72,9 @@ export const characters = [
             { trigger: 'かき氷', reply: '100万円ね' },
             { trigger: 'はい100円', reply: ['99万9900円足りないじゃない','99万9900円足りないわよ'] },
             { trigger: '最終的には激しくしてもいいと？', reply: 'いいわけあるかー！' },
+            { trigger: 'もっとましな嘘ついてくれないか？', reply: '嘘じゃありませんー！' },
+            { trigger: 'いや、惚れてない', reply: 'あんた絶対あたしのことバカにしてるーー！' },
+            { trigger: '協力してもらえないかな？', reply: 'まさか脱げと！？' },
         ],
     },
     {
