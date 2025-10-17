@@ -28,6 +28,7 @@ export const characters = [
             { trigger: 'ケツァルコアトル', reply: 'くけぇー！くけぇー！' },
             { trigger: 'たかはら', reply: '....さかはらじゃなくて？' },
             { trigger: 'チャーハンの作りかた教えて', reply: ['いいよ' ,'うーん…'] },
+            { trigger: 'ちょっと竿貸して', reply: '鳥白の海を舐めない方がいいと思う' },
         ],
     },
     {
