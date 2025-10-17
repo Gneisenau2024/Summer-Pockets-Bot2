@@ -74,9 +74,9 @@ client.on('messageCreate', (message) => {
                 
                 // --- 特別条件: じゃんけん系 ---
         if (item.trigger === 'じゃんけん') {
-            // 有効なパターン
+            // 有効パターン
             const validJanken = ['じゃんけん', 'じゃんけん✊', 'じゃんけん✋', 'じゃんけん✌️'];
-            // 有効パターンに完全一致したときのみOK
+            // 有効なものだけOK（それ以外の「じゃんけん＋α」は無視 → 他のトリガーが拾う）
             return validJanken.includes(content);
         }
 
