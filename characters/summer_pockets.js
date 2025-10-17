@@ -83,7 +83,7 @@ export const characters = [
     },
     {
         name: '紬ヴェンダース',
-        triggers: ['つむぎ', '紬ー'],
+        triggers: ['つむぎ', '紬ー','紬'],
         replies: [
             'むぎゅ？',
             'むぎゅぅ～',
