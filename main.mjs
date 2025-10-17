@@ -71,10 +71,19 @@ client.on('messageCreate', (message) => {
                 // triggerが配列ならどれかにマッチすればOK
                 return item.trigger.some(t => content.includes(t.toLowerCase()));
             } else {
-                // 文字列の場合
-                return content.includes(item.trigger.toLowerCase());
-            }
-        });
+                
+                // --- 特別条件: じゃんけん系 ---
+        if (item.trigger === 'じゃんけん') {
+            // 有効なパターン
+            const validJanken = ['じゃんけん', 'じゃんけん✊', 'じゃんけん✋', 'じゃんけん✌️'];
+            // 有効パターンに完全一致したときのみOK
+            return validJanken.includes(content);
+        }
+
+        // それ以外は部分一致
+        return content.includes(item.trigger.toLowerCase());  
+    }  
+});
 
         if (specific) {  
             const replyText = getRandomReply(char.name, specific.reply); 
