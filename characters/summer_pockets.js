@@ -173,8 +173,8 @@ export const characters = [
             { trigger: ['神...？','…神？','神…？'], reply: 'うみです' },
         ],
     },
-     {
-        name: '神山識',
+    {
+        name: '神山識<:Shiki_oni:1408044015319781477>',
         triggers: ['識','識ちゃん','ｼｷﾁｬﾝ'],
         replies: [
             'なんだい？',
