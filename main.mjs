@@ -60,7 +60,7 @@ client.on('messageCreate', (message) => {
     if (message.author.bot) return; 
 
     // --- メッセージを小文字化＆空白削除 ---
-    const cleanContent = message.content.toLowerCase().replace(/\s/g, ''); 
+    const content = message.content.toLowerCase().replace(/\s/g, ''); 
     let reacted = false; 
 
     for (const char of characters) { 
@@ -71,7 +71,7 @@ client.on('messageCreate', (message) => {
             if (Array.isArray(item.trigger)) {
                 // triggerが配列ならどれかにマッチすればOK
                 return item.trigger.some(t =>
-                    cleanContent.includes(t.toLowerCase().replace(/\s/g, '')));
+                    content.includes(t.toLowerCase().replace(/\s/g, '')));
             } else {
                 
                 // --- 特別条件: じゃんけん系 ---
@@ -79,11 +79,11 @@ client.on('messageCreate', (message) => {
                     // 有効パターン（空白削除版）
                     const validJanken = ['じゃんけん', 'じゃんけん✊', 'じゃんけん✋', 'じゃんけん✌️'].map(v =>v.toLowerCase().replace(/\s/g, '')
                     );
-                    return validJanken.includes(cleanContent); 
+                    return validJanken.includes(content); 
         }
 
         // それ以外は部分一致
-        return cleanContent.includes(item.trigger.toLowerCase().replace(/\s/g, ''));   
+        return content.includes(item.trigger.toLowerCase().replace(/\s/g, ''));   
     }   
 });
 
