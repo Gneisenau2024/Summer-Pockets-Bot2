@@ -59,7 +59,8 @@ client.once('clientReady', () => {
 client.on('messageCreate', (message) => { 
     if (message.author.bot) return; 
 
-    const content = message.content.toLowerCase().trim(); 
+    // --- メッセージを小文字化＆空白削除 ---
+    const cleanContent = message.content.toLowerCase().replace(/\s/g, ''); 
     let reacted = false; 
 
     for (const char of characters) { 
@@ -69,20 +70,21 @@ client.on('messageCreate', (message) => {
         const specific = char.specificReplies?.find(item => {
             if (Array.isArray(item.trigger)) {
                 // triggerが配列ならどれかにマッチすればOK
-                return item.trigger.some(t => content.includes(t.toLowerCase()));
+                return item.trigger.some(t =>
+                    cleanContent.includes(t.toLowerCase().replace(/\s/g, '')));
             } else {
                 
                 // --- 特別条件: じゃんけん系 ---
-        if (item.trigger === 'じゃんけん') {
-            // 有効パターン
-            const validJanken = ['じゃんけん', 'じゃんけん✊', 'じゃんけん✋', 'じゃんけん✌️'];
-            // 有効なものだけOK（それ以外の「じゃんけん＋α」は無視 → 他のトリガーが拾う）
-            return validJanken.includes(content);
+        if (item.trigger === 'じゃんけん') { 
+                    // 有効パターン（空白削除版）
+                    const validJanken = ['じゃんけん', 'じゃんけん✊', 'じゃんけん✋', 'じゃんけん✌️'].map(v =>v.toLowerCase().replace(/\s/g, '')
+                    );
+                    return validJanken.includes(cleanContent); 
         }
 
         // それ以外は部分一致
-        return content.includes(item.trigger.toLowerCase());  
-    }  
+        return cleanContent.includes(item.trigger.toLowerCase().replace(/\s/g, ''));   
+    }   
 });
 
         if (specific) {  
