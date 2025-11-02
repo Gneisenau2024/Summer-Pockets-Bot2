@@ -19,7 +19,7 @@ export const characters = [
         // 特定の文章に対する固定返信
         specificReplies: [
             { trigger: ['スイカバー','すいかばー'], reply: ['食べたい…','くれるの？'] },
-            { trigger: 'れいだーん', reply: 'れいげんやちこなれっ！' },
+            { trigger: 'れいだーん', reply: 'れいげんいやちこなれっ！' },
             { trigger: 'たぬき', reply: 'たばかったな' },
             { trigger: '釣れる？', reply: ['ぼちぼちです','まあまあです'] },
             { trigger: 'ぼっち', reply: ['ぼっ…！？','ぼっち言うなし…'] },
