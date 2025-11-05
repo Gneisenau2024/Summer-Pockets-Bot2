@@ -112,7 +112,7 @@ function buildCharacterEmbed(character) {
         .map(r => {
           const triggers = Array.isArray(r.trigger) ? r.trigger.join(' / ') : r.trigger;
           const replies = Array.isArray(r.reply) ? r.reply.join(' / ') : r.reply;
-          return `🎯 **${triggers}**\n  → ${replies}`;
+          return `🎯 **${triggers}**\n　→ ${replies}`;
         })
         .join('\n')
         .slice(0, 1024)
@@ -133,4 +133,20 @@ function buildCharacterEmbed(character) {
     .setFooter({ text: 'Summer Pockets Bot' })
     .setTimestamp();
 }
+
+collector.on('end', async () => {
+  const disabledRow = new ActionRowBuilder().addComponents(
+    row.components.map(button => ButtonBuilder.from(button).setDisabled(true))
+  );
+
+  try {
+    await message.edit({ components: [disabledRow] });
+  } catch (err) {
+    if (err.code === 10008) {
+      console.warn('⚠️ メッセージが存在しないため編集できませんでした (ephemeralなど)');
+    } else {
+      console.error('💥 予期しないエラー:', err);
+    }
+  }
+});
 
