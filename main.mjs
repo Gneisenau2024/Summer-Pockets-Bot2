@@ -9,6 +9,13 @@ import fs from 'fs';
 // キャラデータを読み込み
 import { characters } from './characters/summer_pockets.js';
 
+//起動時の一瞬のエラーだけ無視
+process.on('unhandledRejection', (err) => {
+  if (err.code === 10062) return; // 起動直後のエラーを無視
+  console.error('🚨 Unhandled Rejection:', err);
+});
+
+
 // --- 直前の返信を記録するマップ（キャラ名ごと） ---
 const lastReplies = new Map();
 
