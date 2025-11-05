@@ -9,14 +9,6 @@ import fs from 'fs';
 // キャラデータを読み込み
 import { characters } from './characters/summer_pockets.js';
 
-//起動時の一瞬のエラーだけ無視
-process.on('unhandledRejection', (err) => {
-  if (!err) return;
-  if (err.code === 10062) return; // Unknown interaction
-  if (err.code === 40060) return; // Interaction already acknowledged
-  console.error('🚨 Unhandled Rejection:', err);
-});
-
 // --- 直前の返信を記録するマップ（キャラ名ごと） ---
 const lastReplies = new Map();
 
@@ -129,6 +121,17 @@ client.on(Events.InteractionCreate, async (interaction) => {
         // コマンド実行
         await command.execute(interaction);
     } catch (error) {
+        // 💡 軽微な Discord 側のエラーは無視
+        if (error.code === 10062) { // Unknown interaction
+            console.warn('⚠️ 無視: Unknown interaction (コード10062)');
+            return;
+        }
+        if (error.code === 40060) { // Interaction already acknowledged
+            console.warn('⚠️ 無視: Interaction already acknowledged (コード40060)');
+            return;
+        }
+
+        // それ以外のエラーは出力
         console.error('❌ コマンド実行エラー:', error);
 
         // 安全なエラーハンドリング
@@ -144,6 +147,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 });
             }
         } catch (innerError) {
+            if (innerError.code === 10062 || innerError.code === 40060) {
+                console.warn('⚠️ エラー応答も軽微エラーとして無視');
+                return;
+            }
             console.error('⚠️ エラー応答にも失敗:', innerError);
         }
     }
@@ -153,6 +160,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 client.on('error', (error) => {
     console.error('❌ Discord クライアントエラー:', error);
 });
+
 
 // --- プロセス終了時の処理 ---
 process.on('SIGINT', () => {
