@@ -37,13 +37,13 @@ export default {
       if (!character) {
         await interaction.reply({
           content: `「${nameInput}」というキャラは見つかりませんでした。`,
-          ephemeral: true
+          flags: MessageFlags.Ephemeral
         });
         return;
       }
 
       const embed = buildCharacterEmbed(character);
-      await interaction.reply({ embeds: [embed], ephemeral: true });
+      await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -65,7 +65,7 @@ export default {
     const message = await interaction.reply({
       embeds: [embeds[currentPage]],
       components: [row],
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
       fetchReply: true
     });
 
