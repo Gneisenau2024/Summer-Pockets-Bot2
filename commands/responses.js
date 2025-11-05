@@ -104,12 +104,33 @@ export default {
   }
 };
 
-// --- Embed構築関数 ---
+// ──────────────── Embed作成関数 ────────────────
 function buildCharacterEmbed(character) {
+  // 固定返信（specificReplies）
+  const fixed = character.specificReplies?.length
+    ? character.specificReplies
+        .map(r => {
+          const triggers = Array.isArray(r.trigger) ? r.trigger.join(' / ') : r.trigger;
+          const replies = Array.isArray(r.reply) ? r.reply.join(' / ') : r.reply;
+          return `🎯 **${triggers}** → 💬 ${replies}`;
+        })
+        .join('\n')
+        .slice(0, 1024)
+    : '（登録なし）';
+
+  // ランダム返答（replies）
+  const resp = character.replies?.length
+    ? character.replies.map(r => `・${r}`).join('\n').slice(0, 1024)
+    : '（登録なし）';
+
   return new EmbedBuilder()
-    .setTitle(`🌻 ${character.name}`)
+    .setColor(0x87CEEB)
+    .setTitle(`🎐 ${character.name} の返答一覧`)
     .addFields(
-      { name: '固定返信', value: character.fixedResponses?.join('\n') || '（登録なし）' },
-      { name: '返答パターン', value: character.responses?.join('\n') || '（登録なし）' },
-    );
+      { name: '🌻 固定返信', value: fixed },
+      { name: '💬 返答パターン', value: resp }
+    )
+    .setFooter({ text: 'Summer Pockets Bot' })
+    .setTimestamp();
 }
+
