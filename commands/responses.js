@@ -1,4 +1,3 @@
-// commands/responses.js
 import {
   SlashCommandBuilder,
   EmbedBuilder,
@@ -26,26 +25,27 @@ export default {
     ),
 
   async execute(interaction) {
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+
     const nameInput = interaction.options.getString('name');
     const showAll = interaction.options.getBoolean('all') || false;
 
     // ──────────────── 個別表示モード ────────────────
     if (!showAll && nameInput) {
       const character = characters.find(c =>
-        c.name.includes(nameInput) || 
+        c.name.includes(nameInput) ||
         c.triggers.some(t => t.includes(nameInput))
       );
 
       if (!character) {
-        await interaction.reply({
-          content: `「${nameInput}」というキャラは見つかりませんでした。`,
-          flags: MessageFlags.Ephemeral,
+        await interaction.editReply({
+          content: `「${nameInput}」というキャラは見つかりませんでした。`
         });
         return;
       }
 
       const embed = buildCharacterEmbed(character);
-      await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+      await interaction.editReply({ embeds: [embed] });
       return;
     }
 
@@ -64,21 +64,19 @@ export default {
         .setStyle(ButtonStyle.Secondary)
     );
 
-    const message = await interaction.reply({
+    const message = await interaction.editReply({
       embeds: [embeds[currentPage].setFooter({ text: `ページ 1/${embeds.length}` })],
       components: [row],
-      flags: MessageFlags.Ephemeral,
-      fetchReply: true
     });
 
     const collector = message.createMessageComponentCollector({
       componentType: ComponentType.Button,
-      time: 180_000 // 3分間操作可能
+      time: 180_000
     });
 
     collector.on('collect', async (btnInteraction) => {
       if (btnInteraction.user.id !== interaction.user.id) {
-        await btnInteraction.followUp({ // ← ここが reply→followUp に変更
+        await btnInteraction.reply({
           content: 'この操作は実行者のみが行えます。',
           flags: MessageFlags.Ephemeral
         });
@@ -106,25 +104,13 @@ export default {
   }
 };
 
-// ──────────────── Embed作成関数 ────────────────
+// --- Embed構築関数 ---
 function buildCharacterEmbed(character) {
-  const fixed = character.specificReplies?.length
-    ? character.specificReplies.map(r =>
-        `・${Array.isArray(r.trigger) ? r.trigger.join(' / ') : r.trigger}\n　→ ${Array.isArray(r.reply) ? r.reply.join(' / ') : r.reply}`
-      ).join('\n')
-    : '（登録なし）';
-
-  const resp = character.replies?.length
-    ? character.replies.map(r => `・${r}`).join('\n')
-    : '（登録なし）';
-
   return new EmbedBuilder()
-    .setColor(0x87CEEB)
-    .setTitle(`🎐 ${character.name} の返答一覧`)
+    .setTitle(`🌻 ${character.name}`)
     .addFields(
-      { name: '🌻 固定返信', value: fixed.slice(0, 1024) },
-      { name: '💬 返答パターン', value: resp.slice(0, 1024) }
-    )
-    .setFooter({ text: 'Summer Pockets Bot' })
-    .setTimestamp();
+      { name: '固定返信', value: character.fixedResponses?.join('\n') || '（登録なし）' },
+      { name: '返答パターン', value: character.responses?.join('\n') || '（登録なし）' },
+    );
 }
+
