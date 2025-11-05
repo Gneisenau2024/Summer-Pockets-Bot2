@@ -39,13 +39,13 @@ export default {
       if (!character) {
         await interaction.reply({
           content: `「${nameInput}」というキャラは見つかりませんでした。`,
-          ephemeral: true
+          flags: MessageFlags.Ephemeral,
         });
         return;
       }
 
       const embed = buildCharacterEmbed(character);
-      await interaction.reply({ embeds: [embed], ephemeral: true });
+      await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral, });
       return;
     }
 
@@ -67,7 +67,7 @@ export default {
     const message = await interaction.reply({
       embeds: [embeds[currentPage].setFooter({ text: `ページ 1/${embeds.length}` })],
       components: [row],
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
       fetchReply: true
     });
 
@@ -124,6 +124,6 @@ function buildCharacterEmbed(character) {
       { name: '🌻 固定返信', value: fixedReplies.join('\n').slice(0, 1024) },
       { name: '💬 返答パターン', value: normalReplies.join('\n').slice(0, 1024) }
     )
-    .setFooter({ text: 'Summer_Pockets_Bot' }) 
+    .setFooter({ text: 'Summer Pockets Bot' })
     .setTimestamp();
 }
