@@ -11,10 +11,11 @@ import { characters } from './characters/summer_pockets.js';
 
 //起動時の一瞬のエラーだけ無視
 process.on('unhandledRejection', (err) => {
-  if (err.code === 10062) return; // 起動直後のエラーを無視
+  if (!err) return;
+  if (err.code === 10062) return; // Unknown interaction
+  if (err.code === 40060) return; // Interaction already acknowledged
   console.error('🚨 Unhandled Rejection:', err);
 });
-
 
 // --- 直前の返信を記録するマップ（キャラ名ごと） ---
 const lastReplies = new Map();
