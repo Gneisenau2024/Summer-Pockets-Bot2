@@ -15,7 +15,9 @@ export const characters = [
             '……ふーん',
             '……変なひと',
             'うわぁぁぁ！？な、な、な、なななに？',
-            '…はぴ'
+            '…はぴ',
+            'え',
+            'なに？',
         ],
         // 特定の文章に対する固定返信
         specificReplies: [
@@ -32,6 +34,8 @@ export const characters = [
             { trigger: 'ちょっと竿貸して', reply: '鳥白の海を舐めない方がいいと思う' },
             { trigger: ['ご馳走？','ごちそう？'], reply: '奢らせていただきまする' },
             { trigger: '河童ですら泳げない', reply: 'カバじゃなくて？' },
+            { trigger: 'しろはの癖毛', reply: ['！？','いつ癖毛を気にしていることになっていたっ','気にしてないっ'] },
+            { trigger: 'デート', reply: ['.....','ご遠慮します'] },
         ],
     },
     {
@@ -96,6 +100,7 @@ export const characters = [
         replies: [
             'むぎゅ？',
             'むぎゅぅ～',
+            'むぎゅ！',
         ],
         // 特定の文章に対する固定返信
         specificReplies: [
@@ -133,6 +138,7 @@ export const characters = [
             'はい、うみです',
             'チャーハン食べますか？',
             'なんですか？',
+            'んー？',
         ],
         // 特定の文章に対する固定返信
         specificReplies: [
