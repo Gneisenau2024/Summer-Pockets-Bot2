@@ -32,7 +32,7 @@ export default {
     // ──────────────── 個別表示モード ────────────────
     if (!showAll && nameInput) {
       const character = characters.find(c =>
-        c.name.includes(nameInput) ||
+        c.name.includes(nameInput) || 
         c.triggers.some(t => t.includes(nameInput))
       );
 
@@ -45,7 +45,7 @@ export default {
       }
 
       const embed = buildCharacterEmbed(character);
-      await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral, });
+      await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -78,7 +78,10 @@ export default {
 
     collector.on('collect', async (btnInteraction) => {
       if (btnInteraction.user.id !== interaction.user.id) {
-        await btnInteraction.reply({ content: 'この操作は実行者のみが行えます。', flags: MessageFlags.Ephemeral });
+        await btnInteraction.followUp({ // ← ここが reply→followUp に変更
+          content: 'この操作は実行者のみが行えます。',
+          flags: MessageFlags.Ephemeral
+        });
         return;
       }
 
@@ -105,24 +108,22 @@ export default {
 
 // ──────────────── Embed作成関数 ────────────────
 function buildCharacterEmbed(character) {
-  // 固定返信（specificReplies）
-  const fixedReplies = character.specificReplies
-    ? character.specificReplies.map(s =>
-        `🎯 **${Array.isArray(s.trigger) ? s.trigger.join(' / ') : s.trigger}**\n　→ ${Array.isArray(s.reply) ? s.reply.join(' / ') : s.reply}`
-      )
-    : ['（登録なし）'];
+  const fixed = character.specificReplies?.length
+    ? character.specificReplies.map(r =>
+        `・${Array.isArray(r.trigger) ? r.trigger.join(' / ') : r.trigger}\n　→ ${Array.isArray(r.reply) ? r.reply.join(' / ') : r.reply}`
+      ).join('\n')
+    : '（登録なし）';
 
-  // 通常返信（replies）
-  const normalReplies = character.replies?.length
-    ? character.replies.map(r => `💬 ${r}`)
-    : ['（登録なし）'];
+  const resp = character.replies?.length
+    ? character.replies.map(r => `・${r}`).join('\n')
+    : '（登録なし）';
 
   return new EmbedBuilder()
     .setColor(0x87CEEB)
     .setTitle(`🎐 ${character.name} の返答一覧`)
     .addFields(
-      { name: '🌻 固定返信', value: fixedReplies.join('\n').slice(0, 1024) },
-      { name: '💬 返答パターン', value: normalReplies.join('\n').slice(0, 1024) }
+      { name: '🌻 固定返信', value: fixed.slice(0, 1024) },
+      { name: '💬 返答パターン', value: resp.slice(0, 1024) }
     )
     .setFooter({ text: 'Summer Pockets Bot' })
     .setTimestamp();

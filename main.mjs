@@ -1,7 +1,7 @@
 // main.mjs - Discord Botのメインプログラム
 
 // 必要なライブラリを読み込み
-import { Client, GatewayIntentBits, Collection, Events } from 'discord.js';
+import { Client, GatewayIntentBits, Collection, Events, MessageFlags } from 'discord.js';
 import dotenv from 'dotenv';
 import express from 'express';
 import fs from 'fs';
