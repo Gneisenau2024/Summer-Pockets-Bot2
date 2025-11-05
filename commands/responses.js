@@ -112,7 +112,7 @@ function buildCharacterEmbed(character) {
         .map(r => {
           const triggers = Array.isArray(r.trigger) ? r.trigger.join(' / ') : r.trigger;
           const replies = Array.isArray(r.reply) ? r.reply.join(' / ') : r.reply;
-          return `🎯 **${triggers}** → 💬 ${replies}`;
+          return `🎯 **${triggers}\n** → 💬 ${replies}`;
         })
         .join('\n')
         .slice(0, 1024)
