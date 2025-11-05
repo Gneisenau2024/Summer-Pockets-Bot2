@@ -113,4 +113,3 @@ function buildCharacterEmbed(character) {
       { name: '返答パターン', value: character.responses?.join('\n') || '（登録なし）' },
     );
 }
-
