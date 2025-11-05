@@ -5,7 +5,8 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
-  ComponentType
+  ComponentType,
+  MessageFlags
 } from 'discord.js';
 import { characters } from '../characters/summer_pockets.js';
 
@@ -31,7 +32,8 @@ export default {
     // ──────────────── 個別表示モード ────────────────
     if (!showAll && nameInput) {
       const character = characters.find(c =>
-        c.name.includes(nameInput) || c.triggers.includes(nameInput)
+        c.name.includes(nameInput) ||
+        c.triggers.some(t => t.includes(nameInput))
       );
 
       if (!character) {
@@ -63,7 +65,7 @@ export default {
     );
 
     const message = await interaction.reply({
-      embeds: [embeds[currentPage]],
+      embeds: [embeds[currentPage].setFooter({ text: `ページ 1/${embeds.length}` })],
       components: [row],
       flags: MessageFlags.Ephemeral,
       fetchReply: true
@@ -75,6 +77,11 @@ export default {
     });
 
     collector.on('collect', async (btnInteraction) => {
+      if (btnInteraction.user.id !== interaction.user.id) {
+        await btnInteraction.reply({ content: 'この操作は実行者のみが行えます。', flags: MessageFlags.Ephemeral });
+        return;
+      }
+
       if (btnInteraction.customId === 'prev') {
         currentPage = (currentPage - 1 + embeds.length) % embeds.length;
       } else if (btnInteraction.customId === 'next') {
@@ -82,9 +89,7 @@ export default {
       }
 
       await btnInteraction.update({
-        embeds: [embeds[currentPage].setFooter({
-          text: `Summer Pockets Bot | ページ ${currentPage + 1}/${embeds.length}`
-        })],
+        embeds: [embeds[currentPage].setFooter({ text: `ページ ${currentPage + 1}/${embeds.length}` })],
         components: [row]
       });
     });
@@ -100,21 +105,24 @@ export default {
 
 // ──────────────── Embed作成関数 ────────────────
 function buildCharacterEmbed(character) {
-  const fixed = character.fixedReplies?.length
-    ? character.fixedReplies.map(r => `・${r}`).join('\n')
-    : '（登録なし）';
+  // 固定返信（specificReplies）
+  const fixedReplies = character.specificReplies
+    ? character.specificReplies.map(s =>
+        `🎯 **${Array.isArray(s.trigger) ? s.trigger.join(' / ') : s.trigger}**\n　→ ${Array.isArray(s.reply) ? s.reply.join(' / ') : s.reply}`
+      )
+    : ['（登録なし）'];
 
-  const resp = character.responses?.length
-    ? character.responses.map(r => `・${r}`).join('\n')
-    : '（登録なし）';
+  // 通常返信（replies）
+  const normalReplies = character.replies?.length
+    ? character.replies.map(r => `💬 ${r}`)
+    : ['（登録なし）'];
 
   return new EmbedBuilder()
     .setColor(0x87CEEB)
     .setTitle(`🎐 ${character.name} の返答一覧`)
     .addFields(
-      { name: '🌻 固定返信', value: fixed.slice(0, 1024) },
-      { name: '💬 返答パターン', value: resp.slice(0, 1024) }
+      { name: '🌻 固定返信', value: fixedReplies.join('\n').slice(0, 1024) },
+      { name: '💬 返答パターン', value: normalReplies.join('\n').slice(0, 1024) }
     )
-    .setFooter({ text: `Summer Pockets Bot` })
-    .setTimestamp();
+    .setFooter({ text: Summer_Pockets_Bot }) .setTimestamp();
 }
