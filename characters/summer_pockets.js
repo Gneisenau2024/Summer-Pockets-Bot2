@@ -18,6 +18,7 @@ export const characters = [
             '…はぴ',
             'え',
             'なに？',
+            'よ、よう',
         ],
         // 特定の文章に対する固定返信
         specificReplies: [
@@ -39,6 +40,8 @@ export const characters = [
             { trigger: ['メロンバー','めろんばー'], reply: ['…いらない','…あげる'] },
             { trigger: 'よろしく', reply: 'よろしくお願いしまする' },
             { trigger: ['何してるの？','なにしてるの？'], reply: 'それは、私の台詞っ' },
+            { trigger: ['マンガ好きなのか？','マンガ好き？'], reply: '漫画は好きだけどあなたはきらい！' },
+            { trigger: 'へじゃぷ', reply: '変なの' },
         ],
     },
     {
